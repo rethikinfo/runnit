@@ -5,13 +5,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Runnit </title>
+  <title>🏃 Runnit - Track Your Cardio</title>
   <link rel="manifest" href="manifest.json">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     * {
       margin: 0;
@@ -32,11 +31,17 @@
     }
 
     .header {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #334155;
     }
 
     .header h1 {
       font-size: 42px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .header p {
@@ -56,12 +61,20 @@
       border-radius: 24px;
       padding: 24px;
       margin-bottom: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card:hover {
+      border-color: #475569;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.1);
     }
 
     .card-title {
       font-size: 22px;
       font-weight: 700;
       margin-bottom: 20px;
+      color: #f1f5f9;
     }
 
     .form-grid {
@@ -78,6 +91,19 @@
       background: #0f172a;
       color: white;
       font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      background: #1e293b;
+    }
+
+    input::placeholder {
+      color: #64748b;
     }
 
     button {
@@ -86,16 +112,35 @@
       border-radius: 14px;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     .save-btn {
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
       color: white;
     }
 
+    .save-btn:hover {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+
     .reset-btn {
-      background: #dc2626;
+      background: linear-gradient(135deg, #dc2626, #ef4444);
       color: white;
+    }
+
+    .reset-btn:hover {
+      background: linear-gradient(135deg, #b91c1c, #dc2626);
     }
 
     .buttons {
@@ -112,20 +157,29 @@
     }
 
     .stat-box {
-      background: #0f172a;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
       padding: 20px;
       border-radius: 20px;
       border: 1px solid #334155;
+      transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+      border-color: #475569;
+      background: linear-gradient(135deg, #1e293b, #334155);
     }
 
     .stat-box p {
       color: #94a3b8;
-      font-size: 14px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .stat-box h2 {
       margin-top: 10px;
       font-size: 28px;
+      color: #22c55e;
     }
 
     #map {
@@ -147,13 +201,16 @@
       height: 100%;
     }
 
+
+
     #backBtn {
       position: absolute;
       top: 20px;
       left: 20px;
       z-index: 10000;
-      background: #dc2626;
+      background: linear-gradient(135deg, #dc2626, #ef4444);
       color: white;
+      min-width: 120px;
     }
 
     #liveOverlay {
@@ -161,19 +218,37 @@
       top: 20px;
       right: 20px;
       z-index: 10000;
-      background: rgba(15, 23, 42, .92);
-      padding: 18px;
+      background: rgba(15, 23, 42, .95);
+      padding: 20px;
       border-radius: 20px;
       display: grid;
-      gap: 10px;
-      min-width: 180px;
+      gap: 15px;
+      min-width: 200px;
+      border: 2px solid #2563eb;
+      backdrop-filter: blur(10px);
+    }
+
+    .live-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .live-item p {
+      color: #94a3b8;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .live-item span {
       display: block;
-      font-size: 24px;
-      margin-top: 4px;
+      font-size: 28px;
+      margin-top: 0;
       font-weight: 700;
+      color: #22c55e;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
     }
 
     .tracking-controls {
@@ -187,7 +262,8 @@
     }
 
     .tracking-controls button {
-      min-width: 120px;
+      min-width: 130px;
+      font-size: 15px;
     }
 
     canvas {
@@ -440,18 +516,18 @@
     <div id="liveOverlay">
 
       <div class="live-item">
-        Distance
-        <span id="liveDistance">0 km</span>
+        <p>Distance</p>
+        <span id="liveDistance">0.00 km</span>
       </div>
 
       <div class="live-item">
-        Pace
-        <span id="livePace">0</span>
+        <p>Time</p>
+        <span id="liveTime">00:00:00</span>
       </div>
 
       <div class="live-item">
-        Time
-        <span id="liveTime">0</span>
+        <p>Pace</p>
+        <span id="livePace">0.00 min/km</span>
       </div>
 
     </div>
@@ -483,9 +559,12 @@
 
     let totalGpsDistance = 0;
     let trackingStartTime = null;
+    let totalPausedTime = 0;
+    let pauseStartTime = null;
     let lastPosition = null;
     let currentRoute = [];
     let routeCoordinates = [];
+    let timerInterval = null;
 
     let chart;
 
@@ -536,6 +615,8 @@
       }
 
       paused = false;
+      totalPausedTime = 0;
+      pauseStartTime = null;
 
       currentRoute = [];
       routeCoordinates = [];
@@ -549,6 +630,10 @@
       setTimeout(() => {
         fullscreenMap.invalidateSize();
       }, 300);
+
+      // Start continuous timer update
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateLiveDashboard, 100);
 
       watchId = navigator.geolocation.watchPosition(
 
@@ -625,19 +710,28 @@
 
     function pauseTracking() {
       paused = true;
+      pauseStartTime = Date.now();
     }
 
     function resumeTracking() {
+      if (paused && pauseStartTime) {
+        totalPausedTime += Date.now() - pauseStartTime;
+        pauseStartTime = null;
+      }
       paused = false;
     }
 
     function stopTracking() {
 
       navigator.geolocation.clearWatch(watchId);
+      if (timerInterval) clearInterval(timerInterval);
 
-      const minutes = (
-        Date.now() - trackingStartTime
-      ) / 60000;
+      let elapsedTime = Date.now() - trackingStartTime - totalPausedTime;
+      if (paused && pauseStartTime) {
+        elapsedTime -= (Date.now() - pauseStartTime);
+      }
+
+      const minutes = elapsedTime / 60000;
 
       const pace = totalGpsDistance > 0
         ? minutes / totalGpsDistance
@@ -693,13 +787,19 @@
 
     function exitTracking() {
 
+      if (timerInterval) clearInterval(timerInterval);
       document.getElementById('trackingScreen')
         .style.display = 'none';
     }
 
     function updateLiveDashboard() {
 
-      const elapsedMs = Date.now() - trackingStartTime;
+      let elapsedMs = Date.now() - trackingStartTime - totalPausedTime;
+
+      // If currently paused, subtract the current pause duration
+      if (paused && pauseStartTime) {
+        elapsedMs -= (Date.now() - pauseStartTime);
+      }
 
       const totalSeconds = Math.floor(elapsedMs / 1000);
 
