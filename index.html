@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏃 Runnit - Track Your Cardio</title>
-  <link rel="manifest" href="manifest.json">
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0" />
+
+  <title>🏃 Runnit - Track Your Cardio</title>
+
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
+
     * {
       margin: 0;
       padding: 0;
@@ -61,20 +70,17 @@
       border-radius: 24px;
       padding: 24px;
       margin-bottom: 20px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: .3s;
     }
 
     .card:hover {
       border-color: #475569;
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.1);
     }
 
     .card-title {
       font-size: 22px;
       font-weight: 700;
       margin-bottom: 20px;
-      color: #f1f5f9;
     }
 
     .form-grid {
@@ -91,19 +97,6 @@
       background: #0f172a;
       color: white;
       font-size: 15px;
-      transition: all 0.3s ease;
-    }
-
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      background: #1e293b;
-    }
-
-    input::placeholder {
-      color: #64748b;
     }
 
     button {
@@ -112,73 +105,52 @@
       border-radius: 14px;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.3s ease;
-      font-size: 14px;
+      transition: .3s;
     }
 
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    button:active {
-      transform: translateY(0);
     }
 
     .save-btn {
-      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      background: linear-gradient(135deg,#2563eb,#3b82f6);
       color: white;
-    }
-
-    .save-btn:hover {
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
     }
 
     .reset-btn {
-      background: linear-gradient(135deg, #dc2626, #ef4444);
+      background: linear-gradient(135deg,#dc2626,#ef4444);
       color: white;
-    }
-
-    .reset-btn:hover {
-      background: linear-gradient(135deg, #b91c1c, #dc2626);
     }
 
     .buttons {
       display: flex;
       gap: 10px;
       margin-top: 15px;
+      flex-direction: column;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4,1fr);
       gap: 15px;
       margin-bottom: 20px;
     }
 
     .stat-box {
-      background: linear-gradient(135deg, #0f172a, #1e293b);
+      background: #0f172a;
       padding: 20px;
       border-radius: 20px;
       border: 1px solid #334155;
-      transition: all 0.3s ease;
-    }
-
-    .stat-box:hover {
-      border-color: #475569;
-      background: linear-gradient(135deg, #1e293b, #334155);
     }
 
     .stat-box p {
       color: #94a3b8;
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .stat-box h2 {
       margin-top: 10px;
-      font-size: 28px;
+      font-size: 26px;
       color: #22c55e;
     }
 
@@ -186,6 +158,38 @@
       height: 400px;
       border-radius: 20px;
       overflow: hidden;
+    }
+
+    canvas {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 10px;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 14px 0;
+      border-bottom: 1px solid #334155;
+      text-align: left;
+    }
+
+    .history-table tr {
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .history-table tr:hover {
+      background: rgba(255,255,255,.03);
+    }
+
+    .history-table th {
+      color: #94a3b8;
+      font-size: 14px;
     }
 
     #trackingScreen {
@@ -201,16 +205,13 @@
       height: 100%;
     }
 
-
-
     #backBtn {
       position: absolute;
       top: 20px;
       left: 20px;
       z-index: 10000;
-      background: linear-gradient(135deg, #dc2626, #ef4444);
+      background: #dc2626;
       color: white;
-      min-width: 120px;
     }
 
     #liveOverlay {
@@ -218,37 +219,26 @@
       top: 20px;
       right: 20px;
       z-index: 10000;
-      background: rgba(15, 23, 42, .95);
+      background: rgba(15,23,42,.95);
       padding: 20px;
       border-radius: 20px;
       display: grid;
-      gap: 15px;
-      min-width: 200px;
+      gap: 14px;
+      min-width: 220px;
       border: 2px solid #2563eb;
-      backdrop-filter: blur(10px);
-    }
-
-    .live-item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
     }
 
     .live-item p {
       color: #94a3b8;
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .live-item span {
       display: block;
+      margin-top: 4px;
       font-size: 28px;
-      margin-top: 0;
       font-weight: 700;
       color: #22c55e;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 1px;
     }
 
     .tracking-controls {
@@ -263,120 +253,79 @@
 
     .tracking-controls button {
       min-width: 130px;
-      font-size: 15px;
     }
 
-    canvas {
-      background: #0f172a;
-      padding: 10px;
-      border-radius: 20px;
+    #lapModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      z-index: 999999;
+      overflow: auto;
+      padding: 20px;
     }
 
-    .history-table {
-      width: 100%;
-      border-collapse: collapse;
+    .lap-content {
+      max-width: 700px;
+      margin: auto;
+      background: #1e293b;
+      border-radius: 24px;
+      border: 1px solid #334155;
+      padding: 24px;
     }
 
-    .history-table th,
-    .history-table td {
-      padding: 14px 0;
-      border-bottom: 1px solid #334155;
-      text-align: left;
-    }
-
-    .history-table th {
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    .route-controls {
+    .lap-header {
       display: flex;
-      gap: 10px;
-      margin-top: 15px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    @media(max-width:900px) {
-      .grid {
-        grid-template-columns: 1fr;
+    @media(max-width:900px){
+
+      .grid{
+        grid-template-columns:1fr;
       }
 
-      .stats {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media(max-width:600px) {
-
-      body {
-        padding: 12px;
-      }
-
-      .header h1 {
-        font-size: 32px;
-      }
-
-      .card {
-        padding: 18px;
-        border-radius: 18px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .buttons,
-      .route-controls,
-      .tracking-controls {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .tracking-controls {
-        left: 0;
-        right: 0;
-        transform: none;
-        padding: 0 20px;
-        bottom: 20px;
-      }
-
-      .tracking-controls button {
-        width: 100%;
-      }
-
-      #liveOverlay {
-        left: 12px;
-        right: 12px;
-        top: 70px;
-        min-width: auto;
-      }
-
-      #backBtn {
-        width: calc(100% - 24px);
-        left: 12px;
-      }
-
-      #map {
-        height: 300px;
-      }
-
-      canvas {
-        height: 260px !important;
-      }
-
-      .history-table {
-        font-size: 13px;
-      }
-
-      .history-table th,
-      .history-table td {
-        padding: 10px 4px;
+      .stats{
+        grid-template-columns:1fr 1fr;
       }
     }
 
-    .buttons,
-    .route-controls {
-      flex-direction: column;
+    @media(max-width:600px){
+
+      body{
+        padding:12px;
+      }
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .tracking-controls{
+        flex-direction:column;
+        left:0;
+        right:0;
+        transform:none;
+        padding:0 20px;
+      }
+
+      .tracking-controls button{
+        width:100%;
+      }
+
+      #liveOverlay{
+        left:12px;
+        right:12px;
+        top:70px;
+      }
+
+      #backBtn{
+        width:calc(100% - 24px);
+        left:12px;
+      }
     }
+
   </style>
 
 </head>
@@ -386,8 +335,15 @@
   <div class="container">
 
     <div class="header">
-      <h1>Runnit </h1>
-      <p>Track your cardio activities, analyze your performance, and achieve your fitness goals with Runnit </p>
+
+      <h1>Runnit</h1>
+
+      <p>
+        Track your cardio activities,
+        analyze your performance,
+        and achieve your fitness goals.
+      </p>
+
     </div>
 
     <div class="grid">
@@ -395,59 +351,93 @@
       <div>
 
         <div class="card">
-          <div class="card-title">Add Activity</div>
+
+          <div class="card-title">
+            Add Activity
+          </div>
 
           <form id="activityForm">
 
             <div class="form-grid">
 
-              <input type="date" id="date" required>
+              <input type="date"
+                id="date"
+                required />
 
               <select id="sport" required>
-                <option value="">Choose the activity</option>
+
+                <option value="">
+                  Choose Activity
+                </option>
+
                 <option>Running</option>
                 <option>Walking</option>
                 <option>Cycling</option>
                 <option>Swimming</option>
-                <option>Aquathon</option>
-                <option>Cyclothon</option>
-                <option>Triathlon</option>
+
               </select>
 
-              <div id="distanceContainer"></div>
+              <div id="distanceContainer">
 
-              <input type="number" id="runtime" placeholder="Time (minutes)" step="0.1">
+                <input type="number"
+                  id="distance"
+                  placeholder="Distance (km)"
+                  step="0.1"
+                  required />
 
-              <input type="text" id="pace" placeholder="Pace" readonly>
+              </div>
+
+              <input type="number"
+                id="runtime"
+                placeholder="Time (minutes)"
+                step="0.1" />
+
+              <input type="text"
+                id="pace"
+                placeholder="Pace"
+                readonly />
 
             </div>
 
             <div class="buttons">
-              <button type="submit" class="save-btn">Save</button>
-              <button type="button" class="reset-btn" onclick="resetData()">Reset</button>
+
+              <button type="submit"
+                class="save-btn">
+                Save
+              </button>
+
+              <button type="button"
+                class="reset-btn"
+                onclick="resetData()">
+                Reset
+              </button>
+
             </div>
 
           </form>
+
         </div>
 
         <div class="card">
-          <div class="card-title">GPS Tracking</div>
+
+          <div class="card-title">
+            GPS Tracking
+          </div>
+
           <div id="map"></div>
 
           <div class="buttons">
-            <button class="save-btn" onclick="startTracking()">Start GPS</button>
-            <button class="reset-btn" onclick="stopTracking()">Stop GPS</button>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-title">Saved Routes</div>
+            <button class="save-btn"
+              onclick="startTracking()">
+              Start GPS
+            </button>
 
-          <select id="routeSelector"></select>
+            <button class="reset-btn"
+              onclick="stopTracking()">
+              Stop GPS
+            </button>
 
-          <div class="route-controls">
-            <button class="save-btn" onclick="loadSelectedRoute()">Load Route</button>
-            <button class="save-btn" onclick="replayRoute()">Replay</button>
           </div>
 
         </div>
@@ -481,15 +471,57 @@
         </div>
 
         <div class="card">
-          <div class="card-title">Analytics</div>
-          <canvas id="chart"></canvas>
+
+          <div class="card-title">
+            Personal Records
+          </div>
+
+          <div class="stats">
+
+            <div class="stat-box">
+              <p>Fastest Run Pace</p>
+              <h2 id="prRun">--</h2>
+            </div>
+
+            <div class="stat-box">
+              <p>Longest Run</p>
+              <h2 id="longRun">--</h2>
+            </div>
+
+            <div class="stat-box">
+              <p>Longest Ride</p>
+              <h2 id="longRide">--</h2>
+            </div>
+
+            <div class="stat-box">
+              <p>Longest Swim</p>
+              <h2 id="longSwim">--</h2>
+            </div>
+
+          </div>
+
         </div>
 
         <div class="card">
-          <div class="card-title">History</div>
+
+          <div class="card-title">
+            Analytics
+          </div>
+
+          <canvas id="chart"></canvas>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-title">
+            History
+          </div>
 
           <table class="history-table">
+
             <thead>
+
               <tr>
                 <th>Date</th>
                 <th>Sport</th>
@@ -497,8 +529,11 @@
                 <th>Time</th>
                 <th>Pace</th>
               </tr>
+
             </thead>
+
             <tbody id="history"></tbody>
+
           </table>
 
         </div>
@@ -509,25 +544,40 @@
 
   </div>
 
+
+
+
+
+  <!-- TRACKING SCREEN -->
+
   <div id="trackingScreen">
 
-    <button id="backBtn" onclick="exitTracking()">Back</button>
+    <button id="backBtn"
+      onclick="exitTracking()">
+      Back
+    </button>
 
     <div id="liveOverlay">
 
       <div class="live-item">
         <p>Distance</p>
-        <span id="liveDistance">0.00 km</span>
+        <span id="liveDistance">
+          0.00 km
+        </span>
       </div>
 
       <div class="live-item">
         <p>Time</p>
-        <span id="liveTime">00:00:00</span>
+        <span id="liveTime">
+          00:00:00
+        </span>
       </div>
 
       <div class="live-item">
         <p>Pace</p>
-        <span id="livePace">0.00 min/km</span>
+        <span id="livePace">
+          0.00 min/km
+        </span>
       </div>
 
     </div>
@@ -535,605 +585,935 @@
     <div id="fullscreenMap"></div>
 
     <div class="tracking-controls">
-      <button class="save-btn" onclick="pauseTracking()">Pause</button>
-      <button class="save-btn" onclick="resumeTracking()">Resume</button>
-      <button class="reset-btn" onclick="stopTracking()">Stop</button>
+
+      <button class="save-btn"
+        onclick="pauseTracking()">
+        Pause
+      </button>
+
+      <button class="save-btn"
+        onclick="resumeTracking()">
+        Resume
+      </button>
+
+      <button class="reset-btn"
+        onclick="stopTracking()">
+        Stop
+      </button>
+
     </div>
 
   </div>
 
-  <script>
 
-    const form = document.getElementById('activityForm');
 
-    let activities = JSON.parse(localStorage.getItem('activities')) || [];
-    let savedRoutes = JSON.parse(localStorage.getItem('savedRoutes')) || [];
 
-    let map;
-    let fullscreenMap;
-    let marker;
-    let routeLine;
-    let watchId;
-    let paused = false;
-    let replayMarker;
 
-    let totalGpsDistance = 0;
-    let trackingStartTime = null;
-    let totalPausedTime = 0;
-    let pauseStartTime = null;
-    let lastPosition = null;
-    let currentRoute = [];
-    let routeCoordinates = [];
-    let timerInterval = null;
+  <!-- LAP MODAL -->
 
-    let chart;
+  <div id="lapModal">
 
-    function initMaps() {
+    <div class="lap-content">
 
-      map = L.map('map').setView([11.0168, 76.9558], 13);
+      <div class="lap-header">
 
-      fullscreenMap = L.map('fullscreenMap').setView([11.0168, 76.9558], 15);
+        <h2>Lap Splits</h2>
 
-      L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          attribution: 'OpenStreetMap'
-        }
-      ).addTo(map);
+        <button class="reset-btn"
+          onclick="closeLapModal()">
+          Close
+        </button>
 
-      L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          attribution: 'OpenStreetMap'
-        }
-      ).addTo(fullscreenMap);
-    }
+      </div>
 
-    function calculateDistance(lat1, lon1, lat2, lon2) {
+      <table class="history-table">
 
-      const R = 6371;
+        <thead>
 
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
+          <tr>
+            <th>KM</th>
+            <th>Pace</th>
+            <th>Split Time</th>
+          </tr>
 
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) *
-        Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        </thead>
 
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        <tbody id="lapTable"></tbody>
 
-      return R * c;
-    }
+      </table>
 
-    function startTracking() {
+    </div>
 
-      if (!navigator.geolocation) {
-        alert('GPS not supported');
-        return;
+  </div>
+
+
+
+
+
+<script>
+
+  const form =
+    document.getElementById('activityForm');
+
+  let activities =
+    JSON.parse(localStorage.getItem('activities'))
+    || [];
+
+  let map;
+  let fullscreenMap;
+  let marker;
+  let routeLine;
+  let watchId;
+  let replayMarker;
+
+  let paused = false;
+
+  let totalGpsDistance = 0;
+  let trackingStartTime = null;
+  let totalPausedTime = 0;
+  let pauseStartTime = null;
+
+  let lastPosition = null;
+
+  let routeCoordinates = [];
+
+  let chart;
+
+  let lapData = [];
+  let currentLapDistance = 0;
+  let lastLapTime = 0;
+
+  let gpsRunId = 0;
+
+  let timerInterval = null;
+
+  let personalRecords =
+    JSON.parse(localStorage.getItem('personalRecords'))
+    || {
+
+      running: {
+        fastestPace: null,
+        longestDistance: 0
+      },
+
+      cycling: {
+        longestDistance: 0
+      },
+
+      swimming: {
+        longestDistance: 0
       }
 
-      paused = false;
-      totalPausedTime = 0;
-      pauseStartTime = null;
+    };
 
-      currentRoute = [];
-      routeCoordinates = [];
-      lastPosition = null;
-      totalGpsDistance = 0;
-      trackingStartTime = Date.now();
 
-      const screen = document.getElementById('trackingScreen');
-      screen.style.display = 'block';
 
-      setTimeout(() => {
-        fullscreenMap.invalidateSize();
-      }, 300);
+  function initMaps() {
 
-      // Start continuous timer update
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(updateLiveDashboard, 100);
+    map =
+      L.map('map')
+      .setView([11.0168,76.9558],13);
 
-      watchId = navigator.geolocation.watchPosition(
+    fullscreenMap =
+      L.map('fullscreenMap')
+      .setView([11.0168,76.9558],15);
 
-        position => {
+    L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:'OpenStreetMap'
+      }
+    ).addTo(map);
 
-          if (paused) return;
+    L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:'OpenStreetMap'
+      }
+    ).addTo(fullscreenMap);
 
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
+  }
 
-          routeCoordinates.push([lat, lng]);
-          currentRoute.push([lat, lng]);
 
-          if (lastPosition) {
 
-            totalGpsDistance += calculateDistance(
-              lastPosition.lat,
-              lastPosition.lng,
-              lat,
-              lng
-            );
+  function calculateDistance(
+    lat1,
+    lon1,
+    lat2,
+    lon2
+  ){
+
+    const R = 6371;
+
+    const dLat =
+      (lat2-lat1)*Math.PI/180;
+
+    const dLon =
+      (lon2-lon1)*Math.PI/180;
+
+    const a =
+      Math.sin(dLat/2)*
+      Math.sin(dLat/2)
+      +
+      Math.cos(lat1*Math.PI/180)
+      *
+      Math.cos(lat2*Math.PI/180)
+      *
+      Math.sin(dLon/2)
+      *
+      Math.sin(dLon/2);
+
+    const c =
+      2*
+      Math.atan2(
+        Math.sqrt(a),
+        Math.sqrt(1-a)
+      );
+
+    return R*c;
+  }
+
+
+
+  function startTracking(){
+
+    if(!navigator.geolocation){
+      alert('GPS not supported');
+      return;
+    }
+
+    paused = false;
+
+    totalPausedTime = 0;
+    pauseStartTime = null;
+
+    totalGpsDistance = 0;
+
+    routeCoordinates = [];
+
+    lastPosition = null;
+
+    lapData = [];
+
+    currentLapDistance = 0;
+    lastLapTime = 0;
+
+    gpsRunId = Date.now();
+
+    trackingStartTime = Date.now();
+
+    document.getElementById(
+      'trackingScreen'
+    ).style.display = 'block';
+
+    setTimeout(()=>{
+      fullscreenMap.invalidateSize();
+    },300);
+
+    if(timerInterval)
+      clearInterval(timerInterval);
+
+    timerInterval =
+      setInterval(updateLiveDashboard,100);
+
+    watchId =
+      navigator.geolocation.watchPosition(
+
+        position=>{
+
+          if(paused) return;
+
+          const lat =
+            position.coords.latitude;
+
+          const lng =
+            position.coords.longitude;
+
+          routeCoordinates.push([lat,lng]);
+
+          let segmentDistance = 0;
+
+          if(lastPosition){
+
+            segmentDistance =
+              calculateDistance(
+                lastPosition.lat,
+                lastPosition.lng,
+                lat,
+                lng
+              );
+
+            totalGpsDistance += segmentDistance;
+
+            currentLapDistance += segmentDistance;
           }
 
-          lastPosition = { lat, lng };
+          lastPosition = {lat,lng};
 
-          if (marker) {
-            marker.setLatLng([lat, lng]);
-          } else {
-            marker = L.marker([lat, lng]).addTo(fullscreenMap);
+
+
+          /* AUTO LAP */
+
+          if(currentLapDistance >= 1){
+
+            const elapsedMs =
+              Date.now()
+              - trackingStartTime
+              - totalPausedTime;
+
+            const lapMinutes =
+              (elapsedMs/60000)
+              - lastLapTime;
+
+            const lapPace =
+              lapMinutes/currentLapDistance;
+
+            lapData.push({
+
+              km: lapData.length + 1,
+
+              splitTime:
+                lapMinutes.toFixed(2),
+
+              pace:
+                lapPace.toFixed(2)
+
+            });
+
+            lastLapTime =
+              elapsedMs/60000;
+
+            currentLapDistance = 0;
           }
 
-          if (routeLine) {
+
+
+          if(marker){
+
+            marker.setLatLng([lat,lng]);
+
+          }else{
+
+            marker =
+              L.marker([lat,lng])
+              .addTo(fullscreenMap);
+          }
+
+          if(routeLine)
             routeLine.remove();
-          }
 
-          routeLine = L.polyline(routeCoordinates, {
-            weight: 5
-          }).addTo(fullscreenMap);
+          routeLine =
+            L.polyline(routeCoordinates,{
+              weight:5
+            }).addTo(fullscreenMap);
 
-          fullscreenMap.setView([lat, lng], 17);
+          fullscreenMap.setView([lat,lng],17);
 
           updateLiveDashboard();
-          autoSaveWorkout();
 
         },
 
-        error => {
+        error=>{
 
-          if (error.code === 1) {
-            alert('Location permission denied');
-          }
-
-          else if (error.code === 2) {
-            alert('Location unavailable');
-          }
-
-          else if (error.code === 3) {
-            alert('Location timeout');
-          }
-
-          else {
-            alert('GPS error');
-          }
+          alert('GPS Error');
 
         },
 
         {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 5000
-        }
-      );
-    }
-
-    function pauseTracking() {
-      paused = true;
-      pauseStartTime = Date.now();
-    }
-
-    function resumeTracking() {
-      if (paused && pauseStartTime) {
-        totalPausedTime += Date.now() - pauseStartTime;
-        pauseStartTime = null;
-      }
-      paused = false;
-    }
-
-    function stopTracking() {
-
-      navigator.geolocation.clearWatch(watchId);
-      if (timerInterval) clearInterval(timerInterval);
-
-      let elapsedTime = Date.now() - trackingStartTime - totalPausedTime;
-      if (paused && pauseStartTime) {
-        elapsedTime -= (Date.now() - pauseStartTime);
-      }
-
-      const minutes = elapsedTime / 60000;
-
-      const pace = totalGpsDistance > 0
-        ? minutes / totalGpsDistance
-        : 0;
-
-      const activity = {
-
-        date: new Date().toISOString().split('T')[0],
-
-        sport: document.getElementById('sport').value || 'Running',
-
-        distance: totalGpsDistance.toFixed(2),
-
-        runtime: minutes.toFixed(1),
-
-        pace: pace.toFixed(2)
-      };
-
-      activities.push(activity);
-
-      localStorage.setItem(
-        'activities',
-        JSON.stringify(activities)
-      );
-
-      const route = {
-
-        date: new Date().toISOString(),
-
-        distance: totalGpsDistance,
-
-        duration: minutes,
-
-        route: [...currentRoute]
-      };
-
-      savedRoutes.push(route);
-
-      localStorage.setItem(
-        'savedRoutes',
-        JSON.stringify(savedRoutes)
-      );
-
-      renderHistory();
-      updateStats();
-      updateChart();
-      loadSavedRoutes();
-
-      exitTracking();
-
-      alert('Workout saved');
-    }
-
-    function exitTracking() {
-
-      if (timerInterval) clearInterval(timerInterval);
-      document.getElementById('trackingScreen')
-        .style.display = 'none';
-    }
-
-    function updateLiveDashboard() {
-
-      let elapsedMs = Date.now() - trackingStartTime - totalPausedTime;
-
-      // If currently paused, subtract the current pause duration
-      if (paused && pauseStartTime) {
-        elapsedMs -= (Date.now() - pauseStartTime);
-      }
-
-      const totalSeconds = Math.floor(elapsedMs / 1000);
-
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      const formattedTime =
-        String(hours).padStart(2, '0') + ':' +
-        String(minutes).padStart(2, '0') + ':' +
-        String(seconds).padStart(2, '0');
-
-      const pace = totalGpsDistance > 0
-        ? (elapsedMs / 60000) / totalGpsDistance
-        : 0;
-
-      document.getElementById('liveDistance').innerText =
-        totalGpsDistance.toFixed(2) + ' km';
-
-      document.getElementById('livePace').innerText =
-        pace.toFixed(2) + ' min/km';
-
-      document.getElementById('liveTime').innerText =
-        formattedTime;
-    }
-
-    function autoSaveWorkout() {
-
-      localStorage.setItem(
-        'autosaveWorkout',
-        JSON.stringify({
-          routeCoordinates,
-          totalGpsDistance,
-          trackingStartTime
-        })
-      );
-    }
-
-    function renderHistory() {
-
-      const history = document.getElementById('history');
-
-      history.innerHTML = '';
-
-      [...activities]
-        .reverse()
-        .forEach(item => {
-
-          history.innerHTML += `
-<tr>
-<td>${item.date}</td>
-<td>${item.sport}</td>
-<td>${item.distance} km</td>
-<td>${item.runtime} min</td>
-<td>${item.pace} min/km</td>
-</tr>
-`;
-
-        });
-    }
-
-    function updateStats() {
-
-      const totalDistance = activities.reduce(
-        (sum, a) => sum + parseFloat(a.distance || 0), 0
-      );
-
-      const totalTime = activities.reduce(
-        (sum, a) => sum + parseFloat(a.runtime || 0), 0
-      );
-
-      const bestPace = activities.length
-        ? Math.min(...activities.map(a => parseFloat(a.pace || 999)))
-        : 0;
-
-      document.getElementById('totalActivities').innerText = activities.length;
-
-      document.getElementById('totalDistance').innerText = totalDistance.toFixed(1) + ' km';
-
-      document.getElementById('totalTime').innerText = totalTime.toFixed(0) + ' min';
-
-      document.getElementById('bestPace').innerText = bestPace + ' min/km';
-    }
-
-    function updateChart() {
-
-      const labels = activities.map(a => a.date);
-      const distances = activities.map(a => a.distance);
-
-      if (chart) {
-        chart.destroy();
-      }
-
-      chart = new Chart(
-        document.getElementById('chart'),
-        {
-          type: 'line',
-
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Distance',
-              data: distances,
-              borderWidth: 3,
-              tension: 0.4
-            }]
-          }
-        }
-      );
-    }
-
-    function resetData() {
-
-      if (!confirm('Delete all data?')) return;
-
-      localStorage.removeItem('activities');
-      localStorage.removeItem('savedRoutes');
-
-      activities = [];
-      savedRoutes = [];
-
-      renderHistory();
-      updateStats();
-      updateChart();
-      loadSavedRoutes();
-    }
-
-    function loadSavedRoutes() {
-
-      const selector = document.getElementById('routeSelector');
-
-      selector.innerHTML = '';
-
-      savedRoutes.forEach((route, index) => {
-
-        selector.innerHTML += `
-<option value="${index}">
-Route ${index + 1} - ${route.distance.toFixed(2)} km
-</option>
-`;
-
-      });
-    }
-
-    function loadSelectedRoute() {
-
-      const index = document.getElementById('routeSelector').value;
-
-      const route = savedRoutes[index];
-
-      if (!route) return;
-
-      if (routeLine) {
-        routeLine.remove();
-      }
-
-      routeLine = L.polyline(route.route, { weight: 5 })
-        .addTo(map);
-
-      map.fitBounds(routeLine.getBounds());
-    }
-
-    function replayRoute() {
-
-      const index = document.getElementById('routeSelector').value;
-
-      const route = savedRoutes[index];
-
-      if (!route) return;
-
-      let i = 0;
-
-      if (replayMarker) {
-        replayMarker.remove();
-      }
-
-      replayMarker = L.marker(route.route[0])
-        .addTo(map);
-
-      const interval = setInterval(() => {
-
-        if (i >= route.route.length) {
-          clearInterval(interval);
-          return;
+          enableHighAccuracy:true,
+          maximumAge:0,
+          timeout:5000
         }
 
-        replayMarker.setLatLng(route.route[i]);
-        map.panTo(route.route[i]);
-
-        i++;
-
-      }, 250);
-    }
-
-    form.addEventListener('submit', e => {
-
-      e.preventDefault();
-
-      const distance = parseFloat(document.getElementById('distance').value || 0);
-      const runtime = parseFloat(document.getElementById('runtime').value || 0);
-
-      const pace = distance > 0
-        ? (runtime / distance).toFixed(2)
-        : 0;
-
-      const activity = {
-
-        date: document.getElementById('date').value,
-
-        sport: document.getElementById('sport').value,
-
-        distance: distance,
-
-        runtime: runtime,
-
-        pace: pace
-      };
-
-      activities.push(activity);
-
-      localStorage.setItem(
-        'activities',
-        JSON.stringify(activities)
       );
 
-      renderHistory();
-      updateStats();
-      updateChart();
+  }
 
-      form.reset();
-    });
 
-    const sportSelect = document.getElementById('sport');
-    const distanceContainer = document.getElementById('distanceContainer');
 
-    sportSelect.addEventListener('change', updateSportFields);
+  function pauseTracking(){
 
-    function updateSportFields() {
+    paused = true;
 
-      const sport = sportSelect.value;
+    pauseStartTime = Date.now();
 
-      if (sport === 'Triathlon') {
+  }
 
-        distanceContainer.innerHTML = `
-<input type="number" id="runDistance" placeholder="Running Distance (km)" step="0.1" required>
-<input type="number" id="cycleDistance" placeholder="Cycling Distance (km)" step="0.1" required>
-<input type="number" id="swimDistance" placeholder="Swimming Distance (meters)" step="1" required>
-`;
 
-      }
 
-      else if (sport === 'Aquathon') {
+  function resumeTracking(){
 
-        distanceContainer.innerHTML = `
-<input type="number" id="runDistance" placeholder="Running Distance (km)" step="0.1" required>
-<input type="number" id="swimDistance" placeholder="Swimming Distance (meters)" step="1" required>
-`;
+    if(paused && pauseStartTime){
 
-      }
+      totalPausedTime +=
+        Date.now() - pauseStartTime;
 
-      else if (sport === 'Cyclothon') {
-
-        distanceContainer.innerHTML = `
-<input type="number" id="runDistance" placeholder="Running Distance (km)" step="0.1" required>
-<input type="number" id="cycleDistance" placeholder="Cycling Distance (km)" step="0.1" required>
-`;
-
-      }
-
-      else if (sport === 'Swimming') {
-
-        distanceContainer.innerHTML = `
-<input type="number" id="distance" placeholder="Swimming Distance (meters)" step="1" required>
-`;
-
-        attachDistanceListener();
-
-      }
-
-      else {
-
-        distanceContainer.innerHTML = `
-<input type="number" id="distance" placeholder="Distance (km)" step="0.1" required>
-`;
-
-        attachDistanceListener();
-
-      }
-
+      pauseStartTime = null;
     }
 
-    function attachDistanceListener() {
+    paused = false;
+  }
 
-      const distanceInput = document.getElementById('distance');
 
-      if (distanceInput) {
 
-        distanceInput.addEventListener('input', updatePace);
-      }
+  function stopTracking(){
+
+    navigator.geolocation.clearWatch(watchId);
+
+    if(timerInterval)
+      clearInterval(timerInterval);
+
+    let elapsedTime =
+      Date.now()
+      - trackingStartTime
+      - totalPausedTime;
+
+    if(paused && pauseStartTime){
+
+      elapsedTime -=
+        (Date.now()-pauseStartTime);
     }
 
-    document.getElementById('runtime')
-      .addEventListener('input', updatePace);
+    const minutes =
+      elapsedTime/60000;
 
-    function updatePace() {
+    const pace =
+      totalGpsDistance > 0
+      ? minutes/totalGpsDistance
+      : 0;
 
-      const distanceInput = document.getElementById('distance');
+    const sport =
+      document.getElementById('sport').value
+      || 'Running';
 
-      if (!distanceInput) return;
+    const activity = {
 
-      const distance = parseFloat(distanceInput.value || 0);
-      const runtime = parseFloat(document.getElementById('runtime').value || 0);
+      id: gpsRunId,
 
-      if (distance && runtime) {
+      gps: true,
 
-        document.getElementById('pace').value =
-          (runtime / distance).toFixed(2) + ' min/km';
-      }
-    }
+      laps: lapData,
 
-    updateSportFields();
+      date:
+        new Date()
+        .toISOString()
+        .split('T')[0],
 
+      sport,
 
-    document.getElementById('date').value =
-      new Date().toISOString().split('T')[0];
+      distance:
+        totalGpsDistance.toFixed(2),
+
+      runtime:
+        minutes.toFixed(1),
+
+      pace:
+        pace.toFixed(2)
+
+    };
+
+    activities.push(activity);
+
+    localStorage.setItem(
+      'activities',
+      JSON.stringify(activities)
+    );
+
+    updatePersonalRecords(activity);
 
     renderHistory();
     updateStats();
     updateChart();
-    loadSavedRoutes();
-    initMaps();
+    renderPersonalRecords();
 
-  </script>
+    exitTracking();
+
+    alert('Workout Saved');
+
+  }
+
+
+
+  function exitTracking(){
+
+    document.getElementById(
+      'trackingScreen'
+    ).style.display = 'none';
+
+  }
+
+
+
+  function updateLiveDashboard(){
+
+    let elapsedMs =
+      Date.now()
+      - trackingStartTime
+      - totalPausedTime;
+
+    if(paused && pauseStartTime){
+
+      elapsedMs -=
+        (Date.now()-pauseStartTime);
+    }
+
+    const totalSeconds =
+      Math.floor(elapsedMs/1000);
+
+    const hours =
+      Math.floor(totalSeconds/3600);
+
+    const minutes =
+      Math.floor(
+        (totalSeconds%3600)/60
+      );
+
+    const seconds =
+      totalSeconds%60;
+
+    const formattedTime =
+      String(hours).padStart(2,'0')
+      + ':'
+      + String(minutes).padStart(2,'0')
+      + ':'
+      + String(seconds).padStart(2,'0');
+
+    const pace =
+      totalGpsDistance > 0
+      ? (elapsedMs/60000)/totalGpsDistance
+      : 0;
+
+    document.getElementById(
+      'liveDistance'
+    ).innerText =
+      totalGpsDistance.toFixed(2)
+      + ' km';
+
+    document.getElementById(
+      'livePace'
+    ).innerText =
+      pace.toFixed(2)
+      + ' min/km';
+
+    document.getElementById(
+      'liveTime'
+    ).innerText =
+      formattedTime;
+
+  }
+
+
+
+  function renderHistory(){
+
+    const history =
+      document.getElementById('history');
+
+    history.innerHTML = '';
+
+    [...activities]
+      .reverse()
+      .forEach(item=>{
+
+        history.innerHTML += `
+
+<tr onclick="showLapData('${item.id}')">
+
+<td>${item.date}</td>
+
+<td>${item.sport}</td>
+
+<td>${item.distance} km</td>
+
+<td>${item.runtime} min</td>
+
+<td>${item.pace} min/km</td>
+
+</tr>
+
+`;
+
+      });
+
+  }
+
+
+
+  function showLapData(id){
+
+    const run =
+      activities.find(
+        a=>String(a.id)===String(id)
+      );
+
+    if(!run) return;
+
+    if(!run.gps){
+
+      alert(
+        'Lap data only available for GPS runs'
+      );
+
+      return;
+    }
+
+    const lapTable =
+      document.getElementById('lapTable');
+
+    lapTable.innerHTML = '';
+
+    run.laps.forEach(lap=>{
+
+      lapTable.innerHTML += `
+
+<tr>
+
+<td>${lap.km}</td>
+
+<td>${lap.pace} min/km</td>
+
+<td>${lap.splitTime} min</td>
+
+</tr>
+
+`;
+
+    });
+
+    document.getElementById(
+      'lapModal'
+    ).style.display = 'block';
+
+  }
+
+
+
+  function closeLapModal(){
+
+    document.getElementById(
+      'lapModal'
+    ).style.display = 'none';
+
+  }
+
+
+
+  function updateStats(){
+
+    const totalDistance =
+      activities.reduce(
+        (sum,a)=>
+        sum+parseFloat(a.distance||0),
+        0
+      );
+
+    const totalTime =
+      activities.reduce(
+        (sum,a)=>
+        sum+parseFloat(a.runtime||0),
+        0
+      );
+
+    const bestPace =
+      activities.length
+      ? Math.min(
+        ...activities.map(
+          a=>parseFloat(a.pace||999)
+        )
+      )
+      : 0;
+
+    document.getElementById(
+      'totalActivities'
+    ).innerText =
+      activities.length;
+
+    document.getElementById(
+      'totalDistance'
+    ).innerText =
+      totalDistance.toFixed(1)
+      + ' km';
+
+    document.getElementById(
+      'totalTime'
+    ).innerText =
+      totalTime.toFixed(0)
+      + ' min';
+
+    document.getElementById(
+      'bestPace'
+    ).innerText =
+      bestPace
+      + ' min/km';
+
+  }
+
+
+
+  function updateChart(){
+
+    const labels =
+      activities.map(a=>a.date);
+
+    const distances =
+      activities.map(a=>a.distance);
+
+    if(chart)
+      chart.destroy();
+
+    chart =
+      new Chart(
+        document.getElementById('chart'),
+        {
+          type:'line',
+
+          data:{
+            labels,
+            datasets:[{
+              label:'Distance',
+              data:distances,
+              borderWidth:3,
+              tension:.4
+            }]
+          }
+        }
+      );
+
+  }
+
+
+
+  function updatePersonalRecords(activity){
+
+    const distance =
+      parseFloat(activity.distance);
+
+    const pace =
+      parseFloat(activity.pace);
+
+    if(activity.sport==='Running'){
+
+      if(
+        !personalRecords.running.fastestPace
+        ||
+        pace <
+        personalRecords.running.fastestPace
+      ){
+
+        personalRecords.running.fastestPace =
+          pace;
+      }
+
+      if(
+        distance >
+        personalRecords.running.longestDistance
+      ){
+
+        personalRecords.running.longestDistance =
+          distance;
+      }
+    }
+
+    if(activity.sport==='Cycling'){
+
+      if(
+        distance >
+        personalRecords.cycling.longestDistance
+      ){
+
+        personalRecords.cycling.longestDistance =
+          distance;
+      }
+    }
+
+    if(activity.sport==='Swimming'){
+
+      if(
+        distance >
+        personalRecords.swimming.longestDistance
+      ){
+
+        personalRecords.swimming.longestDistance =
+          distance;
+      }
+    }
+
+    localStorage.setItem(
+      'personalRecords',
+      JSON.stringify(personalRecords)
+    );
+
+  }
+
+
+
+  function renderPersonalRecords(){
+
+    document.getElementById(
+      'prRun'
+    ).innerText =
+
+      personalRecords.running.fastestPace
+      ? personalRecords.running.fastestPace
+      + ' min/km'
+      : '--';
+
+    document.getElementById(
+      'longRun'
+    ).innerText =
+
+      personalRecords.running.longestDistance
+      ? personalRecords.running.longestDistance.toFixed(2)
+      + ' km'
+      : '--';
+
+    document.getElementById(
+      'longRide'
+    ).innerText =
+
+      personalRecords.cycling.longestDistance
+      ? personalRecords.cycling.longestDistance.toFixed(2)
+      + ' km'
+      : '--';
+
+    document.getElementById(
+      'longSwim'
+    ).innerText =
+
+      personalRecords.swimming.longestDistance
+      ? personalRecords.swimming.longestDistance.toFixed(0)
+      + ' m'
+      : '--';
+
+  }
+
+
+
+  function resetData(){
+
+    if(!confirm('Delete all workouts?'))
+      return;
+
+    localStorage.removeItem('activities');
+
+    activities = [];
+
+    renderHistory();
+    updateStats();
+    updateChart();
+
+    /* PR NOT RESET */
+
+  }
+
+
+
+  form.addEventListener('submit',e=>{
+
+    e.preventDefault();
+
+    const distance =
+      parseFloat(
+        document.getElementById('distance').value
+      );
+
+    const runtime =
+      parseFloat(
+        document.getElementById('runtime').value
+      );
+
+    const pace =
+      distance > 0
+      ? (runtime/distance).toFixed(2)
+      : 0;
+
+    const activity = {
+
+      id: Date.now(),
+
+      gps:false,
+
+      laps:[],
+
+      date:
+        document.getElementById('date').value,
+
+      sport:
+        document.getElementById('sport').value,
+
+      distance,
+
+      runtime,
+
+      pace
+
+    };
+
+    activities.push(activity);
+
+    localStorage.setItem(
+      'activities',
+      JSON.stringify(activities)
+    );
+
+    updatePersonalRecords(activity);
+
+    renderHistory();
+    updateStats();
+    updateChart();
+    renderPersonalRecords();
+
+    form.reset();
+
+  });
+
+
+
+  document.getElementById('runtime')
+    .addEventListener('input',updatePace);
+
+  document.getElementById('distance')
+    .addEventListener('input',updatePace);
+
+
+
+  function updatePace(){
+
+    const distance =
+      parseFloat(
+        document.getElementById('distance').value
+        || 0
+      );
+
+    const runtime =
+      parseFloat(
+        document.getElementById('runtime').value
+        || 0
+      );
+
+    if(distance && runtime){
+
+      document.getElementById('pace').value =
+        (runtime/distance).toFixed(2)
+        + ' min/km';
+    }
+
+  }
+
+
+
+  document.getElementById('date').value =
+    new Date().toISOString().split('T')[0];
+
+
+
+  renderHistory();
+  updateStats();
+  updateChart();
+  renderPersonalRecords();
+  initMaps();
+
+</script>
 
 </body>
-
 </html>
